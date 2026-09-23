@@ -3,7 +3,10 @@ package com.example.calculadoraimc.ui.screens.historico
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -12,7 +15,9 @@ import androidx.compose.ui.unit.dp
 import com.example.calculadoraimc.ui.theme.CalculadoraimcTheme
 
 @Composable
-fun HistoricoScreen() {
+fun HistoricoScreen(
+    onVoltarClick: () -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -26,6 +31,14 @@ fun HistoricoScreen() {
         Text(
             text = "Nenhum cálculo realizado."
         )
+
+        FilledTonalButton(
+            onClick = onVoltarClick,
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(8.dp),
+        ) {
+            Text(text = "Voltar")
+        }
     }
 }
 
@@ -33,6 +46,8 @@ fun HistoricoScreen() {
 @Composable
 fun HistoricoScreenPreview() {
     CalculadoraimcTheme() {
-        HistoricoScreen()
+        HistoricoScreen(
+            onVoltarClick = {}
+        )
     }
 }

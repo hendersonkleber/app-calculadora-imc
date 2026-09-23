@@ -8,17 +8,43 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.calculadoraimc.R
+import com.example.calculadoraimc.domain.ClassificacaoImc
 import com.example.calculadoraimc.ui.theme.CalculadoraimcTheme
 
 @Composable
-fun CalculoScreen() {
+fun CalculoScreen(
+    onHistoricoClick: () -> Unit,
+    viewModel: CalculoViewModel
+) {
+    CalculoContent(
+        state = viewModel.state,
+        onPesoChange = viewModel::onPesoChange,
+        onAlturaChange = viewModel::onAlturaChange,
+        onCalcularClick = viewModel::calcular,
+        onHistoricoClick = onHistoricoClick
+    )
+}
+
+@Composable
+fun CalculoContent(
+    state: CalculoUiState,
+    onPesoChange: (String) -> Unit,
+    onAlturaChange: (String) -> Unit,
+    onCalcularClick: () -> Unit,
+    onHistoricoClick: () -> Unit,
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -34,11 +60,24 @@ fun CalculoScreen() {
         )
 
         OutlinedTextField(
-            value = "",
-            onValueChange = {},
+            value = state.peso,
+            onValueChange = {
+                if (it.matches(Regex("""^\d*[.,]?\d*$"""))) {
+                    onPesoChange(it);
+                }
+            },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Decimal
+            ),
             modifier = Modifier.fillMaxWidth(),
             label = {
                 Text(text = "Peso (KG)")
+            },
+            isError = state.pesoInvalido,
+            supportingText = {
+                if (state.pesoInvalido) {
+                    Text("Informe um peso válido")
+                }
             }
         )
 
@@ -47,11 +86,24 @@ fun CalculoScreen() {
         )
 
         OutlinedTextField(
-            value = "",
-            onValueChange = {},
+            value = state.altura,
+            onValueChange = {
+                if (it.matches(Regex("""^\d*[.,]?\d*$"""))) {
+                    onAlturaChange(it);
+                }
+            },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Decimal
+            ),
             modifier = Modifier.fillMaxWidth(),
             label = {
                 Text(text = "Altura (m)")
+            },
+            isError = state.alturaInvalida,
+            supportingText = {
+                if (state.alturaInvalida) {
+                    Text("Informe uma altura válida")
+                }
             }
         )
 
@@ -60,27 +112,82 @@ fun CalculoScreen() {
         )
 
         Button(
-            onClick = {},
+            onClick = onCalcularClick,
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(8.dp)
         ) {
             Text(text = "Calcular")
         }
 
+        Spacer(
+            modifier = Modifier.height(12.dp)
+        )
+
+        FilledTonalButton(
+            onClick = onHistoricoClick,
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(8.dp),
+        ) {
+            Text(text = "Histórico")
+        }
+
         Spacer(modifier = Modifier.height(32.dp))
 
-        Text("IMC: --")
+        Text(
+            text = state.imc?.let {
+                "IMC: %.2f".format(state.imc)
+            } ?: "IMC: --"
+        )
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        Text("Classificação: --")
+        Text(
+            text = state.classificacao?.let {
+                "Classificação: ${it.texto()}"
+            } ?: "Classificação: --"
+        )
     }
 }
 
+@Composable
+private fun ClassificacaoImc.texto(): String {
+    return when (this) {
+        ClassificacaoImc.ABAIXO_DO_PESO ->
+            stringResource(R.string.classificacao_abaixo_peso)
+
+        ClassificacaoImc.NORMAL ->
+            stringResource(R.string.classificacao_normal)
+
+        ClassificacaoImc.SOBREPESO ->
+            stringResource(R.string.classificacao_sobrepeso)
+
+        ClassificacaoImc.OBESIDADE_GRAU_I ->
+            stringResource(R.string.classificacao_obesidade_grau_1)
+
+        ClassificacaoImc.OBESIDADE_GRAU_II ->
+            stringResource(R.string.classificacao_obesidade_grau_2)
+
+        ClassificacaoImc.OBESIDADE_GRAU_III ->
+            stringResource(R.string.classificacao_obesidade_grau_3)
+    }
+}
+
+
 @Preview(showBackground = true)
 @Composable
-fun CalculoScreenPreview() {
-    CalculadoraimcTheme() {
-        CalculoScreen()
+private fun CalculoContentPreview() {
+    CalculadoraimcTheme {
+        CalculoContent(
+            state = CalculoUiState(
+                peso = "80",
+                altura = "1,80",
+                imc = 24.69,
+                classificacao = ClassificacaoImc.NORMAL
+            ),
+            onPesoChange = {},
+            onAlturaChange = {},
+            onCalcularClick = {},
+            onHistoricoClick = {}
+        )
     }
 }

@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">calculadoraimc</string>
+
+    <string name="classificacao_abaixo_peso">Abaixo do peso</string>
+    <string name="classificacao_normal">Normal</string>
+    <string name="classificacao_sobrepeso">Sobrepeso</string>
+    <string name="classificacao_obesidade_grau_1">Obesidade grau I</string>
+    <string name="classificacao_obesidade_grau_2">Obesidade grau II</string>
+    <string name="classificacao_obesidade_grau_3">Obesidade grau III</string>
 </resources>

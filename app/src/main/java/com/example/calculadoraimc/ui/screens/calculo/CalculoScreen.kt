@@ -11,6 +11,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,6 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.calculadoraimc.R
 import com.example.calculadoraimc.domain.ClassificacaoImc
+import com.example.calculadoraimc.ui.common.texto
 import com.example.calculadoraimc.ui.theme.CalculadoraimcTheme
 
 @Composable
@@ -52,7 +54,8 @@ fun CalculoContent(
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "Calculadora de IMC"
+            text = "Calculadora de IMC",
+            style = MaterialTheme.typography.headlineMedium
         )
 
         Spacer(
@@ -146,29 +149,6 @@ fun CalculoContent(
                 "Classificação: ${it.texto()}"
             } ?: "Classificação: --"
         )
-    }
-}
-
-@Composable
-private fun ClassificacaoImc.texto(): String {
-    return when (this) {
-        ClassificacaoImc.ABAIXO_DO_PESO ->
-            stringResource(R.string.classificacao_abaixo_peso)
-
-        ClassificacaoImc.NORMAL ->
-            stringResource(R.string.classificacao_normal)
-
-        ClassificacaoImc.SOBREPESO ->
-            stringResource(R.string.classificacao_sobrepeso)
-
-        ClassificacaoImc.OBESIDADE_GRAU_I ->
-            stringResource(R.string.classificacao_obesidade_grau_1)
-
-        ClassificacaoImc.OBESIDADE_GRAU_II ->
-            stringResource(R.string.classificacao_obesidade_grau_2)
-
-        ClassificacaoImc.OBESIDADE_GRAU_III ->
-            stringResource(R.string.classificacao_obesidade_grau_3)
     }
 }
 

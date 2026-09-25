@@ -10,6 +10,7 @@ import androidx.navigation3.ui.NavDisplay
 import com.example.calculadoraimc.ui.screens.calculo.CalculoScreen
 import com.example.calculadoraimc.ui.screens.calculo.CalculoViewModel
 import com.example.calculadoraimc.ui.screens.historico.HistoricoScreen
+import com.example.calculadoraimc.ui.screens.historico.HistoricoViewModel
 
 @Composable
 fun AppNavigation() {
@@ -36,7 +37,10 @@ fun AppNavigation() {
             }
 
             entry<Historico> {
+                val viewModel: HistoricoViewModel = hiltViewModel()
+
                 HistoricoScreen(
+                    viewModel = viewModel,
                     onVoltarClick = {
                         backStack.removeLastOrNull()
                     }
